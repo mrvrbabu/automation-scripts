@@ -1,0 +1,19 @@
+List of files 
+create-join-token.sh  get_helm.sh  join-cluster.sh  k8s-slaves.sh  master-k8s.sh 
+
+
+#Run below commands in order in master 
+sh master-k8s.sh  # Once kubernetes is installed generate the join token to join slave nodes 
+
+sh create-join-token.sh
+
+
+# Install helm
+./get_helm.sh 
+
+
+#Run below command on slaves 
+sh k8s-slave.sh  # Run this on slave1 and slave2 
+
+#Join kube cluster by running the join-cluster.sh 
+sh join-cluster.sh  

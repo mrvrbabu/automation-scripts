@@ -81,17 +81,57 @@ Vagrant.configure("2") do |config|
     alpha.vm.box = "bento/ubuntu-22.04"
     alpha.vm.network :private_network, ip: "192.168.56.10"
     alpha.vm.hostname = "master"
+    config.vm.synced_folder "kubernetes-setup/", "/home/vagrant/kubernetes-setup"
+    #config.vm.provision "shell", inline: "/home/vagrant/kubernetes-setup/k8s-master.sh"
+    config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+    vb.cpus = "2"
+    end
+    config.vm.provision "shell" do |s|
+    ssh_pub_key = File.readlines("/home/rbabu/.ssh/id_rsa.pub").first.strip
+    s.inline = <<-SHELL
+    echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+    echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+    SHELL
+    end
   end
 
   config.vm.define :beta do |beta|
     beta.vm.box = "bento/ubuntu-22.04"
     beta.vm.network :private_network, ip: "192.168.56.11"
     beta.vm.hostname = "slave1"
+    config.vm.synced_folder "kubernetes-setup/", "/home/vagrant/kubernetes-setup"
+    #config.vm.provision "shell", inline: "/home/vagrant/kubernetes-setup/k8s-slaves.sh"
+    config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+    vb.cpus = "2"
+    end
+    config.vm.provision "shell" do |s|
+    ssh_pub_key = File.readlines("/home/rbabu/.ssh/id_rsa.pub").first.strip
+    s.inline = <<-SHELL
+    echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+    echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+    SHELL
+    end
   end
 
   config.vm.define :gama do |gama|
     gama.vm.box = "bento/ubuntu-22.04"
     gama.vm.network :private_network, ip: "192.168.56.12"
     gama.vm.hostname = "slave2"
+    config.vm.synced_folder "kubernetes-setup/", "/home/vagrant/kubernetes-setup"    
+    #config.vm.provision "shell", inline: "/home/vagrant/kubernetes-setup/k8s-slaves.sh"
+    config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+    vb.cpus = "2"
+    end
+    config.vm.provision "shell" do |s|
+    ssh_pub_key = File.readlines("/home/rbabu/.ssh/id_rsa.pub").first.strip
+    s.inline = <<-SHELL
+    echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+    echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+    SHELL
+    end
+
   end
 end
