@@ -21,9 +21,9 @@ sudo hostnamectl set-hostname "k8s-master"
 
 
 cat <<EOF | sudo tee -a /etc/hosts 
-192.168.56.10      k8s-master
-192.168.56.11     k8s-slave1
-192.168.56.12     k8s-slave2
+192.168.0.10      k8s-master
+192.168.0.11     k8s-slave1
+192.168.0.12     k8s-slave2
 EOF
 
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
@@ -80,7 +80,8 @@ sudo systemctl enable kubelet.service
 sudo kubeadm config images pull
 
 #sudo kubeadm init --pod-network-cidr=10.10.0.0/16
-sudo kubeadm init --pod-network-cidr=10.10.0.0/16 --apiserver-advertise-address=192.168.56.10
+#sudo kubeadm init --pod-network-cidr=10.10.0.0/16 --apiserver-advertise-address=192.168.56.10
+sudo kubeadm init --pod-network-cidr=10.10.0.0/16 --apiserver-advertise-address=192.168.0.10
 
 
 mkdir -p $HOME/.kube
