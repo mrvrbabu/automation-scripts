@@ -101,3 +101,6 @@ tcp6       0      0 :::5473                 :::*                    LISTEN      
 tcp6       0      0 :::37085                :::*                    LISTEN      -                   
 rbabu@k8s-master:/data/postgresql$ 
 rbabu@k8s-master:/data/postgresql$ 
+
+Note: To uninstall kubernetes simply execut 'kubeadm reset' 
+https://www.baeldung.com/ops/kubernetes-uninstall
