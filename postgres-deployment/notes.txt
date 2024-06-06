@@ -1,4 +1,4 @@
-
+https://www.codeproject.com/Articles/5298768/Deploy-and-Manage-PostgreSQL-on-Kubernetes
 
 sudo apt-get install postgresql-client-common
 sudo apt-get install postgresql-client
