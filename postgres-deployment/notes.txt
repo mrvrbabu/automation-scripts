@@ -104,3 +104,10 @@ rbabu@k8s-master:/data/postgresql$
 
 Note: To uninstall kubernetes simply execut 'kubeadm reset' 
 https://www.baeldung.com/ops/kubernetes-uninstall
+
+
+Postgres Dataset example 
+https://neon.tech/docs/import/import-sample-data#employees-database
+
+wget https://raw.githubusercontent.com/neondatabase/postgres-sample-dbs/main/netflix.sql
+wget https://raw.githubusercontent.com/neondatabase/postgres-sample-dbs/main/employees.sql.gz
