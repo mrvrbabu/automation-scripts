@@ -273,6 +273,7 @@ rbabu@k8s-master:~/charts/postgresql$ jobs
 [1]+  Running                 kubectl port-forward --namespace default svc/postgres-postgresql 5432:5432 --address 0.0.0.0 &
 rbabu@k8s-master:~/charts/postgresql$ 
 
+
 Step 6) Get postgres password 
 rbabu@k8s-master:~/charts/postgresql$ export POSTGRES_PASSWORD=$(kubectl get secret --namespace default postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
 rbabu@k8s-master:~/charts/postgresql$ echo $POSTGRES_PASSWORD
