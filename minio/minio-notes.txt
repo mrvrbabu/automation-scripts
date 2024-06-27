@@ -1,0 +1,29 @@
+https://min.io/docs/minio/kubernetes/upstream/index.html
+
+
+rbabu@k8s-master:~/minio$ kubectl port-forward pod/minio 9000 9090 -n minio-dev --address='0.0.0.0' & 
+[1] 453175
+rbabu@k8s-master:~/minio$ Forwarding from 0.0.0.0:9000 -> 9000
+Forwarding from 0.0.0.0:9090 -> 9090
+Handling connection for 9090
+Handling connection for 9090
+
+
+
+miniovenv) rbabu@k8s-master:~/minio$ python file_uploader.py 
+Created bucket python-test-bucket
+/tmp/test-file.txt successfully uploaded as object my-test-file.txt to bucket python-test-bucket
+(miniovenv) rbabu@k8s-master:~/minio$ date
+Mon Jun  3 03:51:27 PM UTC 2024
+(miniovenv) rbabu@k8s-master:~/minio$ 
+
+
+https://min.io/docs/minio/linux/developers/python/API.html
+
+
+https://www.virtono.com/community/tutorial-how-to/how-to-deploy-minio-on-kubernetes/
+
+In the digital world, data is the new oil. Having effective and scalable storage solutions is essential as data volume increases exponentially. 
+Object storage is useful in situations like these. Instead of managing data as files or blocks, object storage treats data as objects. 
+Every object has data, metadata, and a special identifier. 
+MinIO, an open-source object storage server, is designed to store unstructured data (such as photos, videos, log files, backups, and container/VM images) with high scalability.

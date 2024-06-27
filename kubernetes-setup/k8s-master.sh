@@ -98,3 +98,5 @@ sed -i 's/cidr: 192\.168\.0\.0\/16/cidr: 10.10.0.0\/16/g' custom-resources.yaml
 kubectl create -f custom-resources.yaml
 
 # kubeadm token create --print-join-command
+
+echo "Run sudo kubeadm reset to uninstall kubernetes\n"
