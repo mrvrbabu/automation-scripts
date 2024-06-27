@@ -32,7 +32,7 @@ bitnami   	https://charts.bitnami.com/bitnami
 jupyterhub	https://hub.jupyter.org/helm-chart/
 rbabu@k8s-master:~/charts/postgresql$ 
 
-Note: We can also pull the chart if required to modify the charts 
+Note:- We can also pull the chart if required to modify the charts 
 helm pull bitname/postgres:latest
 
 Step 3)Deploy the postgres package 
