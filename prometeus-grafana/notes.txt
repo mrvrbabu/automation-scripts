@@ -1,3 +1,5 @@
+https://airflow.apache.org/docs/apache-airflow/2.9.3/howto/docker-compose/index.html
+
 docker compose up -d airflow-init
 WARN[0000] The "AIRFLOW_UID" variable is not set. Defaulting to a blank string.
 WARN[0000] The "AIRFLOW_UID" variable is not set. Defaulting to a blank string.
