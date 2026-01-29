@@ -1,0 +1,111 @@
+{
+  "uid": "airflow-core",
+  "title": "Airflow – Core Monitoring",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "tags": ["airflow", "prometheus"],
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Scheduler Heartbeat",
+      "id": 1,
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "airflow_scheduler_heartbeat",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "DAGs Loaded",
+      "id": 2,
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "airflow_dagbag_size",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Running Tasks",
+      "id": 3,
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "airflow_scheduler_tasks_running",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Starving Tasks",
+      "id": 4,
+      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "airflow_scheduler_tasks_starving",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "DAG Success Rate",
+      "id": 5,
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "sum(rate(airflow_dag_success_total[5m])) by (dag_id)",
+          "legendFormat": "{{dag_id}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "DAG Failures",
+      "id": 6,
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "sum(rate(airflow_dag_failed_total[5m])) by (dag_id)",
+          "legendFormat": "{{dag_id}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Task Duration (p95)",
+      "id": 7,
+      "gridPos": { "x": 0, "y": 10, "w": 12, "h": 7 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(airflow_task_duration_seconds_bucket[5m])) by (le, dag_id, task_id))",
+          "legendFormat": "{{dag_id}}.{{task_id}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Task Failures",
+      "id": 8,
+      "gridPos": { "x": 12, "y": 10, "w": 12, "h": 7 },
+      "targets": [
+        {
+          "expr": "sum(rate(airflow_task_failed_total[5m])) by (dag_id, task_id)",
+          "legendFormat": "{{dag_id}}.{{task_id}}",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}
