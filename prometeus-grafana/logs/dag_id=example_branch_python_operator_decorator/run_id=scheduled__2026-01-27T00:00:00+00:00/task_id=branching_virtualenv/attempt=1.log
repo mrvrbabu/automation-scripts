@@ -1,0 +1,141 @@
+[2026-01-28T16:11:22.997+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-01-28T16:11:23.022+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: example_branch_python_operator_decorator.branching_virtualenv scheduled__2026-01-27T00:00:00+00:00 [queued]>
+[2026-01-28T16:11:23.030+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: example_branch_python_operator_decorator.branching_virtualenv scheduled__2026-01-27T00:00:00+00:00 [queued]>
+[2026-01-28T16:11:23.030+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2026-01-28T16:11:23.047+0000] {taskinstance.py:2330} INFO - Executing <Task(_BranchPythonVirtualenvDecoratedOperator): branching_virtualenv> on 2026-01-27 00:00:00+00:00
+[2026-01-28T16:11:23.053+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:62: DeprecationWarning: This process (pid=795) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-01-28T16:11:23.055+0000] {standard_task_runner.py:64} INFO - Started process 801 to run task
+[2026-01-28T16:11:23.055+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'example_branch_python_operator_decorator', 'branching_virtualenv', 'scheduled__2026-01-27T00:00:00+00:00', '--job-id', '36', '--raw', '--subdir', '/home/***/.local/lib/python3.12/site-packages/***/example_dags/example_branch_operator_decorator.py', '--cfg-path', '/tmp/tmp8jguziod']
+[2026-01-28T16:11:23.058+0000] {standard_task_runner.py:91} INFO - Job 36: Subtask branching_virtualenv
+[2026-01-28T16:11:23.106+0000] {task_command.py:426} INFO - Running <TaskInstance: example_branch_python_operator_decorator.branching_virtualenv scheduled__2026-01-27T00:00:00+00:00 [running]> on host f2808779f3b0
+[2026-01-28T16:11:23.209+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='example_branch_python_operator_decorator' AIRFLOW_CTX_TASK_ID='branching_virtualenv' AIRFLOW_CTX_EXECUTION_DATE='2026-01-27T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-01-27T00:00:00+00:00'
+[2026-01-28T16:11:23.211+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-01-28T16:11:23.218+0000] {python.py:708} INFO - Python virtual environment will be cached in /tmp/venv-ebe3c33d
+[2026-01-28T16:11:23.220+0000] {process_utils.py:183} INFO - Executing cmd: /home/***/.local/bin/python -m virtualenv /tmp/venv-ebe3c33d --system-site-packages --python=python
+[2026-01-28T16:11:23.220+0000] {process_utils.py:187} INFO - Output:
+[2026-01-28T16:11:24.793+0000] {process_utils.py:191} INFO - created virtual environment CPython3.12.4.final.0-64 in 845ms
+[2026-01-28T16:11:24.794+0000] {process_utils.py:191} INFO -   creator CPython3Posix(dest=/tmp/venv-ebe3c33d, clear=False, no_vcs_ignore=False, global=True)
+[2026-01-28T16:11:24.795+0000] {process_utils.py:191} INFO -   seeder FromAppData(download=False, pip=bundle, via=copy, app_data_dir=/home/***/.local/share/virtualenv)
+[2026-01-28T16:11:24.795+0000] {process_utils.py:191} INFO -     added seed packages: pip==24.1
+[2026-01-28T16:11:24.796+0000] {process_utils.py:191} INFO -   activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+[2026-01-28T16:11:24.860+0000] {process_utils.py:183} INFO - Executing cmd: /tmp/venv-ebe3c33d/bin/pip install -r /tmp/venv-ebe3c33d/requirements.txt
+[2026-01-28T16:11:24.861+0000] {process_utils.py:187} INFO - Output:
+[2026-01-28T16:11:28.174+0000] {process_utils.py:191} INFO - Collecting numpy~=1.24.4 (from -r /tmp/venv-ebe3c33d/requirements.txt (line 1))
+[2026-01-28T16:11:28.216+0000] {process_utils.py:191} INFO -   Downloading numpy-1.24.4.tar.gz (10.9 MB)
+[2026-01-28T16:11:29.613+0000] {process_utils.py:191} INFO -      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.9/10.9 MB 8.1 MB/s eta 0:00:00
+[2026-01-28T16:11:30.861+0000] {process_utils.py:191} INFO -   Installing build dependencies: started
+[2026-01-28T16:11:37.133+0000] {process_utils.py:191} INFO -   Installing build dependencies: finished with status 'done'
+[2026-01-28T16:11:37.137+0000] {process_utils.py:191} INFO -   Getting requirements to build wheel: started
+[2026-01-28T16:11:37.745+0000] {process_utils.py:191} INFO -   Getting requirements to build wheel: finished with status 'error'
+[2026-01-28T16:11:37.753+0000] {process_utils.py:191} INFO -   error: subprocess-exited-with-error
+[2026-01-28T16:11:37.754+0000] {process_utils.py:191} INFO - 
+[2026-01-28T16:11:37.754+0000] {process_utils.py:191} INFO -   × Getting requirements to build wheel did not run successfully.
+[2026-01-28T16:11:37.754+0000] {process_utils.py:191} INFO -   │ exit code: 1
+[2026-01-28T16:11:37.754+0000] {process_utils.py:191} INFO -   ╰─> [33 lines of output]
+[2026-01-28T16:11:37.755+0000] {process_utils.py:191} INFO -       Traceback (most recent call last):
+[2026-01-28T16:11:37.755+0000] {process_utils.py:191} INFO -         File "/tmp/venv-ebe3c33d/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 353, in <module>
+[2026-01-28T16:11:37.755+0000] {process_utils.py:191} INFO -           main()
+[2026-01-28T16:11:37.756+0000] {process_utils.py:191} INFO -         File "/tmp/venv-ebe3c33d/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 335, in main
+[2026-01-28T16:11:37.756+0000] {process_utils.py:191} INFO -           json_out['return_val'] = hook(**hook_input['kwargs'])
+[2026-01-28T16:11:37.756+0000] {process_utils.py:191} INFO -                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026-01-28T16:11:37.757+0000] {process_utils.py:191} INFO -         File "/tmp/venv-ebe3c33d/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 112, in get_requires_for_build_wheel
+[2026-01-28T16:11:37.757+0000] {process_utils.py:191} INFO -           backend = _build_backend()
+[2026-01-28T16:11:37.757+0000] {process_utils.py:191} INFO -                     ^^^^^^^^^^^^^^^^
+[2026-01-28T16:11:37.757+0000] {process_utils.py:191} INFO -         File "/tmp/venv-ebe3c33d/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 77, in _build_backend
+[2026-01-28T16:11:37.758+0000] {process_utils.py:191} INFO -           obj = import_module(mod_path)
+[2026-01-28T16:11:37.758+0000] {process_utils.py:191} INFO -                 ^^^^^^^^^^^^^^^^^^^^^^^
+[2026-01-28T16:11:37.758+0000] {process_utils.py:191} INFO -         File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+[2026-01-28T16:11:37.759+0000] {process_utils.py:191} INFO -           return _bootstrap._gcd_import(name[level:], package, level)
+[2026-01-28T16:11:37.759+0000] {process_utils.py:191} INFO -                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026-01-28T16:11:37.759+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+[2026-01-28T16:11:37.759+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+[2026-01-28T16:11:37.760+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+[2026-01-28T16:11:37.760+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+[2026-01-28T16:11:37.760+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+[2026-01-28T16:11:37.761+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+[2026-01-28T16:11:37.761+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+[2026-01-28T16:11:37.761+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+[2026-01-28T16:11:37.761+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+[2026-01-28T16:11:37.762+0000] {process_utils.py:191} INFO -         File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+[2026-01-28T16:11:37.762+0000] {process_utils.py:191} INFO -         File "/tmp/pip-build-env-ksh0rosz/overlay/lib/python3.12/site-packages/setuptools/__init__.py", line 16, in <module>
+[2026-01-28T16:11:37.762+0000] {process_utils.py:191} INFO -           import setuptools.version
+[2026-01-28T16:11:37.763+0000] {process_utils.py:191} INFO -         File "/tmp/pip-build-env-ksh0rosz/overlay/lib/python3.12/site-packages/setuptools/version.py", line 1, in <module>
+[2026-01-28T16:11:37.763+0000] {process_utils.py:191} INFO -           import pkg_resources
+[2026-01-28T16:11:37.763+0000] {process_utils.py:191} INFO -         File "/tmp/pip-build-env-ksh0rosz/overlay/lib/python3.12/site-packages/pkg_resources/__init__.py", line 2172, in <module>
+[2026-01-28T16:11:37.763+0000] {process_utils.py:191} INFO -           register_finder(pkgutil.ImpImporter, find_on_path)
+[2026-01-28T16:11:37.764+0000] {process_utils.py:191} INFO -                           ^^^^^^^^^^^^^^^^^^^
+[2026-01-28T16:11:37.764+0000] {process_utils.py:191} INFO -       AttributeError: module 'pkgutil' has no attribute 'ImpImporter'. Did you mean: 'zipimporter'?
+[2026-01-28T16:11:37.764+0000] {process_utils.py:191} INFO -       [end of output]
+[2026-01-28T16:11:37.764+0000] {process_utils.py:191} INFO - 
+[2026-01-28T16:11:37.765+0000] {process_utils.py:191} INFO -   note: This error originates from a subprocess, and is likely not a problem with pip.
+[2026-01-28T16:11:37.765+0000] {process_utils.py:191} INFO - error: subprocess-exited-with-error
+[2026-01-28T16:11:37.765+0000] {process_utils.py:191} INFO - 
+[2026-01-28T16:11:37.766+0000] {process_utils.py:191} INFO - × Getting requirements to build wheel did not run successfully.
+[2026-01-28T16:11:37.766+0000] {process_utils.py:191} INFO - │ exit code: 1
+[2026-01-28T16:11:37.766+0000] {process_utils.py:191} INFO - ╰─> See above for output.
+[2026-01-28T16:11:37.766+0000] {process_utils.py:191} INFO - 
+[2026-01-28T16:11:37.767+0000] {process_utils.py:191} INFO - note: This error originates from a subprocess, and is likely not a problem with pip.
+[2026-01-28T16:11:37.767+0000] {process_utils.py:191} INFO - 
+[2026-01-28T16:11:37.767+0000] {process_utils.py:191} INFO - [notice] A new release of pip is available: 24.1 -> 25.3
+[2026-01-28T16:11:37.767+0000] {process_utils.py:191} INFO - [notice] To update, run: python -m pip install --upgrade pip
+[2026-01-28T16:11:38.013+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-01-28T16:11:38.023+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 741, in _ensure_venv_cache_exists
+    self._prepare_venv(venv_path)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 669, in _prepare_venv
+    prepare_virtualenv(
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/python_virtualenv.py", line 119, in prepare_virtualenv
+    execute_in_subprocess(pip_cmd)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/process_utils.py", line 172, in execute_in_subprocess
+    execute_in_subprocess_with_kwargs(cmd, cwd=cwd)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/process_utils.py", line 195, in execute_in_subprocess_with_kwargs
+    raise subprocess.CalledProcessError(exit_code, cmd)
+subprocess.CalledProcessError: Command '['/tmp/venv-ebe3c33d/bin/pip', 'install', '-r', '/tmp/venv-ebe3c33d/requirements.txt']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/decorators/base.py", line 265, in execute
+    return_value = super().execute(context)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 789, in execute
+    return self.do_branch(context, super().execute(context))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 437, in execute
+    return super().execute(context=serializable_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 235, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 751, in execute_callable
+    venv_path = self._ensure_venv_cache_exists(Path(self.venv_cache_path))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 745, in _ensure_venv_cache_exists
+    raise AirflowException(f"Unable to create new virtual environment in {venv_path}") from e
+airflow.exceptions.AirflowException: Unable to create new virtual environment in /tmp/venv-ebe3c33d
+[2026-01-28T16:11:38.032+0000] {taskinstance.py:1206} INFO - Marking task as FAILED. dag_id=example_branch_python_operator_decorator, task_id=branching_virtualenv, run_id=scheduled__2026-01-27T00:00:00+00:00, execution_date=20260127T000000, start_date=20260128T161123, end_date=20260128T161138
+[2026-01-28T16:11:38.049+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 36 for task branching_virtualenv (Unable to create new virtual environment in /tmp/venv-ebe3c33d; 801)
+[2026-01-28T16:11:38.061+0000] {local_task_job_runner.py:243} INFO - Task exited with return code 1
+[2026-01-28T16:11:38.096+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-01-28T16:11:38.104+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

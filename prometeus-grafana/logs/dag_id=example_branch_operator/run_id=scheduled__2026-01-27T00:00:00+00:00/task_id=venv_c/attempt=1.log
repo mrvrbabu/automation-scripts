@@ -1,0 +1,27 @@
+[2026-01-28T16:11:33.277+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-01-28T16:11:33.320+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: example_branch_operator.venv_c scheduled__2026-01-27T00:00:00+00:00 [queued]>
+[2026-01-28T16:11:33.330+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: example_branch_operator.venv_c scheduled__2026-01-27T00:00:00+00:00 [queued]>
+[2026-01-28T16:11:33.330+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2026-01-28T16:11:33.344+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonVirtualenvOperator): venv_c> on 2026-01-27 00:00:00+00:00
+[2026-01-28T16:11:33.349+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:62: DeprecationWarning: This process (pid=916) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-01-28T16:11:33.351+0000] {standard_task_runner.py:64} INFO - Started process 918 to run task
+[2026-01-28T16:11:33.351+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'example_branch_operator', 'venv_c', 'scheduled__2026-01-27T00:00:00+00:00', '--job-id', '40', '--raw', '--subdir', '/home/***/.local/lib/python3.12/site-packages/***/example_dags/example_branch_operator.py', '--cfg-path', '/tmp/tmpq6xagzmb']
+[2026-01-28T16:11:33.353+0000] {standard_task_runner.py:91} INFO - Job 40: Subtask venv_c
+[2026-01-28T16:11:33.395+0000] {task_command.py:426} INFO - Running <TaskInstance: example_branch_operator.venv_c scheduled__2026-01-27T00:00:00+00:00 [running]> on host f2808779f3b0
+[2026-01-28T16:11:33.496+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='example_branch_operator' AIRFLOW_CTX_TASK_ID='venv_c' AIRFLOW_CTX_EXECUTION_DATE='2026-01-27T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-01-27T00:00:00+00:00'
+[2026-01-28T16:11:33.498+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-01-28T16:11:33.498+0000] {baseoperator.py:400} WARNING - PythonVirtualenvOperator.execute cannot be called outside TaskInstance!
+[2026-01-28T16:11:33.506+0000] {python.py:708} INFO - Python virtual environment will be cached in /tmp/venv-5ea997a7
+[2026-01-28T16:11:33.507+0000] {python.py:720} INFO - Re-using cached Python virtual environment in /tmp/venv-5ea997a7
+[2026-01-28T16:11:33.514+0000] {process_utils.py:183} INFO - Executing cmd: /tmp/venv-5ea997a7/bin/python /tmp/venv-callxjf0tboa/script.py /tmp/venv-callxjf0tboa/script.in /tmp/venv-callxjf0tboa/script.out /tmp/venv-callxjf0tboa/string_args.txt /tmp/venv-callxjf0tboa/termination.log
+[2026-01-28T16:11:33.514+0000] {process_utils.py:187} INFO - Output:
+[2026-01-28T16:11:35.282+0000] {process_utils.py:191} INFO - /home/***/.local/lib/python3.12/site-packages/***/metrics/statsd_logger.py:184 RemovedInAirflow3Warning: The basic metric validator will be deprecated in the future in favor of pattern-matching.  You can try this now by setting config option metrics_use_pattern_match to True.
+[2026-01-28T16:11:36.377+0000] {process_utils.py:191} INFO - Hello World with some numpy stuff: [0 1 2 3 4 5]
+[2026-01-28T16:11:36.715+0000] {python.py:237} INFO - Done. Returned value was: None
+[2026-01-28T16:11:36.715+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-01-28T16:11:36.728+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=example_branch_operator, task_id=venv_c, run_id=scheduled__2026-01-27T00:00:00+00:00, execution_date=20260127T000000, start_date=20260128T161133, end_date=20260128T161136
+[2026-01-28T16:11:36.818+0000] {local_task_job_runner.py:243} INFO - Task exited with return code 0
+[2026-01-28T16:11:36.842+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-01-28T16:11:36.845+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
