@@ -1,0 +1,28 @@
+[2026-01-28T16:11:09.951+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-01-28T16:11:09.987+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: example_branch_operator.branching_ext_python scheduled__2026-01-27T00:00:00+00:00 [queued]>
+[2026-01-28T16:11:09.999+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: example_branch_operator.branching_ext_python scheduled__2026-01-27T00:00:00+00:00 [queued]>
+[2026-01-28T16:11:10.000+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2026-01-28T16:11:10.019+0000] {taskinstance.py:2330} INFO - Executing <Task(BranchExternalPythonOperator): branching_ext_python> on 2026-01-27 00:00:00+00:00
+[2026-01-28T16:11:10.028+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:62: DeprecationWarning: This process (pid=720) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-01-28T16:11:10.029+0000] {standard_task_runner.py:64} INFO - Started process 729 to run task
+[2026-01-28T16:11:10.030+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'example_branch_operator', 'branching_ext_python', 'scheduled__2026-01-27T00:00:00+00:00', '--job-id', '25', '--raw', '--subdir', '/home/***/.local/lib/python3.12/site-packages/***/example_dags/example_branch_operator.py', '--cfg-path', '/tmp/tmp6rj_5443']
+[2026-01-28T16:11:10.032+0000] {standard_task_runner.py:91} INFO - Job 25: Subtask branching_ext_python
+[2026-01-28T16:11:10.091+0000] {task_command.py:426} INFO - Running <TaskInstance: example_branch_operator.branching_ext_python scheduled__2026-01-27T00:00:00+00:00 [running]> on host f2808779f3b0
+[2026-01-28T16:11:10.211+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='example_branch_operator' AIRFLOW_CTX_TASK_ID='branching_ext_python' AIRFLOW_CTX_EXECUTION_DATE='2026-01-27T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-01-27T00:00:00+00:00'
+[2026-01-28T16:11:10.213+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-01-28T16:11:10.213+0000] {baseoperator.py:400} WARNING - BranchExternalPythonOperator.execute cannot be called outside TaskInstance!
+[2026-01-28T16:11:10.650+0000] {baseoperator.py:400} WARNING - BranchExternalPythonOperator.execute cannot be called outside TaskInstance!
+[2026-01-28T16:11:10.743+0000] {process_utils.py:183} INFO - Executing cmd: /home/***/.local/bin/python /tmp/venv-callj_7uan7_/script.py /tmp/venv-callj_7uan7_/script.in /tmp/venv-callj_7uan7_/script.out /tmp/venv-callj_7uan7_/string_args.txt /tmp/venv-callj_7uan7_/termination.log
+[2026-01-28T16:11:10.744+0000] {process_utils.py:187} INFO - Output:
+[2026-01-28T16:11:12.648+0000] {process_utils.py:191} INFO - /home/***/.local/lib/python3.12/site-packages/***/metrics/statsd_logger.py:184 RemovedInAirflow3Warning: The basic metric validator will be deprecated in the future in favor of pattern-matching.  You can try this now by setting config option metrics_use_pattern_match to True.
+[2026-01-28T16:11:13.775+0000] {python.py:237} INFO - Done. Returned value was: ext_py_a
+[2026-01-28T16:11:13.776+0000] {branch.py:36} INFO - Branch into ext_py_a
+[2026-01-28T16:11:13.776+0000] {skipmixin.py:178} INFO - Following branch ext_py_a
+[2026-01-28T16:11:13.814+0000] {skipmixin.py:246} INFO - Skipping tasks [('ext_py_d', -1), ('ext_py_b', -1), ('ext_py_c', -1)]
+[2026-01-28T16:11:13.837+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-01-28T16:11:13.858+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=example_branch_operator, task_id=branching_ext_python, run_id=scheduled__2026-01-27T00:00:00+00:00, execution_date=20260127T000000, start_date=20260128T161109, end_date=20260128T161113
+[2026-01-28T16:11:13.894+0000] {local_task_job_runner.py:243} INFO - Task exited with return code 0
+[2026-01-28T16:11:13.928+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-01-28T16:11:13.931+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

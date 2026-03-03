@@ -1,0 +1,282 @@
+Step 1) 
+rbabu@k8s-master:~/charts$ cat postgres-pv.yaml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgresql-pv
+  labels:
+    type: local
+spec:
+  #storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/postgresql"
+rbabu@k8s-master:~/charts$ kubectl apply -f postgres-pv.yaml 
+persistentvolume/postgresql-pv created
+rbabu@k8s-master:~/charts$ kubectl get pv 
+NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+postgresql-pv   10Gi       RWO            Retain           Available                                   6s
+rbabu@k8s-master:~/charts$ date
+Sat Jun  8 05:16:22 PM UTC 2024
+rbabu@k8s-master:~/charts$ 
+
+Step 2) Add bitnami postgres repo 
+rbabu@k8s-master:~/charts/postgresql$ helm repo add bitnami https://charts.bitnami.com/bitnami 
+"bitnami" already exists with the same configuration, skipping
+rbabu@k8s-master:~/charts/postgresql$ helm repo list 
+NAME      	URL                                
+bitnami   	https://charts.bitnami.com/bitnami 
+jupyterhub	https://hub.jupyter.org/helm-chart/
+rbabu@k8s-master:~/charts/postgresql$ 
+
+Note:- We can also pull the chart if required to modify the charts 
+helm pull bitname/postgres:latest
+
+Step 3)Deploy the postgres package 
+
+rbabu@k8s-master:~/charts/postgresql$ kubectl get pvc 
+No resources found in default namespace.
+rbabu@k8s-master:~/charts/postgresql$ helm install postgres bitnami/postgresql --set persistence.existingClaim=postgres-pv-claim --set volumePermissions.enabled=true
+NAME: postgres
+LAST DEPLOYED: Sat Jun  8 17:24:09 2024
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+CHART NAME: postgresql
+CHART VERSION: 15.5.4
+APP VERSION: 16.3.0
+
+** Please be patient while the chart is being deployed **
+
+PostgreSQL can be accessed via port 5432 on the following DNS names from within your cluster:
+
+    postgres-postgresql.default.svc.cluster.local - Read/Write connection
+
+To get the password for "postgres" run:
+
+    export POSTGRES_PASSWORD=$(kubectl get secret --namespace default postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+
+To connect to your database run the following command:
+
+    kubectl run postgres-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:16.3.0-debian-12-r13 --env="PGPASSWORD=$POSTGRES_PASSWORD" \
+      --command -- psql --host postgres-postgresql -U postgres -d postgres -p 5432
+
+    > NOTE: If you access the container using bash, make sure that you execute "/opt/bitnami/scripts/postgresql/entrypoint.sh /bin/bash" in order to avoid the error "psql: local user with ID 1001} does not exist"
+
+To connect to your database from outside the cluster execute the following commands:
+
+    kubectl port-forward --namespace default svc/postgres-postgresql 5432:5432 &
+    PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d postgres -p 5432
+
+WARNING: The configured password will be ignored on new installation in case when previous PostgreSQL release was deleted through the helm command. In that case, old PVC will have an old password, and setting it through helm won't take effect. Deleting persistent volumes (PVs) will solve the issue.
+
+WARNING: There are "resources" sections in the chart not set. Using "resourcesPreset" is not recommended for production. For production installations, please set the following values according to your workload needs:
+  - primary.resources
+  - readReplicas.resources
+  - volumePermissions.resources
++info https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+rbabu@k8s-master:~/charts/postgresql$ kubectl get pvc 
+NAME                         STATUS   VOLUME          CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+data-postgres-postgresql-0   Bound    postgresql-pv   10Gi       RWO                           13s
+rbabu@k8s-master:~/charts/postgresql$ date
+Sat Jun  8 05:24:34 PM UTC 2024
+rbabu@k8s-master:~/charts/postgresql$ 
+
+
+Step 4) Verify the status 
+
+rbabu@k8s-master:~/charts/postgresql$ kubectl get pods 
+NAME                    READY   STATUS    RESTARTS   AGE
+postgres-postgresql-0   1/1     Running   0          54s
+rbabu@k8s-master:~/charts/postgresql$ kubectl describe pod postgres-postgresql-0 
+Name:             postgres-postgresql-0
+Namespace:        default
+Priority:         0
+Service Account:  postgres-postgresql
+Node:             k8s-master/192.168.0.10
+Start Time:       Sat, 08 Jun 2024 17:24:11 +0000
+Labels:           app.kubernetes.io/component=primary
+                  app.kubernetes.io/instance=postgres
+                  app.kubernetes.io/managed-by=Helm
+                  app.kubernetes.io/name=postgresql
+                  app.kubernetes.io/version=16.3.0
+                  apps.kubernetes.io/pod-index=0
+                  controller-revision-hash=postgres-postgresql-57c4f78b5c
+                  helm.sh/chart=postgresql-15.5.4
+                  statefulset.kubernetes.io/pod-name=postgres-postgresql-0
+Annotations:      cni.projectcalico.org/containerID: 74531db3848f09bed9bb4260e6455d862a5b5d49aef1d489a127c3c369e00207
+                  cni.projectcalico.org/podIP: 10.10.235.196/32
+                  cni.projectcalico.org/podIPs: 10.10.235.196/32
+Status:           Running
+IP:               10.10.235.196
+IPs:
+  IP:           10.10.235.196
+Controlled By:  StatefulSet/postgres-postgresql
+Init Containers:
+  init-chmod-data:
+    Container ID:    containerd://d9f1d05d2fa92687244abadc2d73d8afa7af8195f657843947dd9002fd2ed094
+    Image:           docker.io/bitnami/os-shell:12-debian-12-r22
+    Image ID:        docker.io/bitnami/os-shell@sha256:61a67d35734fded998f199db762b88a1004abad115acb6ca473a7ef82dc3d31a
+    Port:            <none>
+    Host Port:       <none>
+    SeccompProfile:  RuntimeDefault
+    Command:
+      /bin/sh
+      -ec
+      chown 1001:1001 /bitnami/postgresql
+      mkdir -p /bitnami/postgresql/data
+      chmod 700 /bitnami/postgresql/data
+      find /bitnami/postgresql -mindepth 1 -maxdepth 1 -not -name "conf" -not -name ".snapshot" -not -name "lost+found" | \
+        xargs -r chown -R 1001:1001
+      chmod -R 777 /dev/shm
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Sat, 08 Jun 2024 17:24:12 +0000
+      Finished:     Sat, 08 Jun 2024 17:24:12 +0000
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:                150m
+      ephemeral-storage:  1Gi
+      memory:             192Mi
+    Requests:
+      cpu:                100m
+      ephemeral-storage:  50Mi
+      memory:             128Mi
+    Environment:          <none>
+    Mounts:
+      /bitnami/postgresql from data (rw)
+      /dev/shm from dshm (rw)
+      /tmp from empty-dir (rw,path="tmp-dir")
+Containers:
+  postgresql:
+    Container ID:    containerd://9a0dfd68756ba735503de0b4bb4745399d074d198a5e411978db50484239b5e4
+    Image:           docker.io/bitnami/postgresql:16.3.0-debian-12-r13
+    Image ID:        docker.io/bitnami/postgresql@sha256:0638e8ca707464bd95d1b9dfaa2537b787cc8a78d02880fe4121dd483ef97b14
+    Port:            5432/TCP
+    Host Port:       0/TCP
+    SeccompProfile:  RuntimeDefault
+    State:           Running
+      Started:       Sat, 08 Jun 2024 17:24:13 +0000
+    Ready:           True
+    Restart Count:   0
+    Limits:
+      cpu:                150m
+      ephemeral-storage:  1Gi
+      memory:             192Mi
+    Requests:
+      cpu:                100m
+      ephemeral-storage:  50Mi
+      memory:             128Mi
+    Liveness:             exec [/bin/sh -c exec pg_isready -U "postgres" -h 127.0.0.1 -p 5432] delay=30s timeout=5s period=10s #success=1 #failure=6
+    Readiness:            exec [/bin/sh -c -e exec pg_isready -U "postgres" -h 127.0.0.1 -p 5432
+[ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
+] delay=5s timeout=5s period=10s #success=1 #failure=6
+    Environment:
+      BITNAMI_DEBUG:                        false
+      POSTGRESQL_PORT_NUMBER:               5432
+      POSTGRESQL_VOLUME_DIR:                /bitnami/postgresql
+      PGDATA:                               /bitnami/postgresql/data
+      POSTGRES_PASSWORD:                    <set to the key 'postgres-password' in secret 'postgres-postgresql'>  Optional: false
+      POSTGRESQL_ENABLE_LDAP:               no
+      POSTGRESQL_ENABLE_TLS:                no
+      POSTGRESQL_LOG_HOSTNAME:              false
+      POSTGRESQL_LOG_CONNECTIONS:           false
+      POSTGRESQL_LOG_DISCONNECTIONS:        false
+      POSTGRESQL_PGAUDIT_LOG_CATALOG:       off
+      POSTGRESQL_CLIENT_MIN_MESSAGES:       error
+      POSTGRESQL_SHARED_PRELOAD_LIBRARIES:  pgaudit
+    Mounts:
+      /bitnami/postgresql from data (rw)
+      /dev/shm from dshm (rw)
+      /opt/bitnami/postgresql/conf from empty-dir (rw,path="app-conf-dir")
+      /opt/bitnami/postgresql/tmp from empty-dir (rw,path="app-tmp-dir")
+      /tmp from empty-dir (rw,path="tmp-dir")
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  data:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  data-postgres-postgresql-0
+    ReadOnly:   false
+  empty-dir:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  dshm:
+    Type:        EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:      Memory
+    SizeLimit:   <unset>
+QoS Class:       Burstable
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age   From               Message
+  ----     ------            ----  ----               -------
+  Warning  FailedScheduling  71s   default-scheduler  0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims. preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling..
+  Normal   Scheduled         69s   default-scheduler  Successfully assigned default/postgres-postgresql-0 to k8s-master
+  Normal   Pulled            69s   kubelet            Container image "docker.io/bitnami/os-shell:12-debian-12-r22" already present on machine
+  Normal   Created           69s   kubelet            Created container init-chmod-data
+  Normal   Started           69s   kubelet            Started container init-chmod-data
+  Normal   Pulled            69s   kubelet            Container image "docker.io/bitnami/postgresql:16.3.0-debian-12-r13" already present on machine
+  Normal   Created           68s   kubelet            Created container postgresql
+  Normal   Started           68s   kubelet            Started container postgresql
+  Warning  Unhealthy         60s   kubelet            Readiness probe failed: 127.0.0.1:5432 - no response
+rbabu@k8s-master:~/charts/postgresql$ 
+
+Step 5) Verify pod status and connect to the db 
+
+rbabu@k8s-master:~/charts/postgresql$ export POSTGRES_PASSWORD=$(kubectl get secret --namespace default postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+rbabu@k8s-master:~/charts/postgresql$ 
+rbabu@k8s-master:~/charts/postgresql$ kubectl run postgres-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:16.3.0-debian-12-r13 --env="PGPASSWORD=$POSTGRES_PASSWORD" \
+      --command -- psql --host postgres-postgresql -U postgres -d postgres -p 5432
+If you don't see a command prompt, try pressing enter.
+
+postgres=# \l
+                                                       List of databases
+   Name    |  Owner   | Encoding | Locale Provider |   Collate   |    Ctype    | ICU Locale | ICU Rules |   Access privileges   
+-----------+----------+----------+-----------------+-------------+-------------+------------+-----------+-----------------------
+ postgres  | postgres | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |            |           | 
+ template0 | postgres | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |             |             |            |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |             |             |            |           | postgres=CTc/postgres
+(3 rows)
+
+postgres=# \l+
+
+
+Step 6) Run below command to configure postgres to port forwarding and allow access from outside 
+
+kubectl port-forward --namespace default svc/postgres-postgresql 5432:5432 --address 0.0.0.0 &
+
+Ex: - 
+rbabu@k8s-master:~/charts/postgresql$ kubectl port-forward --namespace default svc/postgres-postgresql 5432:5432 --address 0.0.0.0 &
+[1] 1096677
+rbabu@k8s-master:~/charts/postgresql$ Forwarding from 0.0.0.0:5432 -> 5432
+
+rbabu@k8s-master:~/charts/postgresql$ 
+rbabu@k8s-master:~/charts/postgresql$ 
+rbabu@k8s-master:~/charts/postgresql$ jobs
+[1]+  Running                 kubectl port-forward --namespace default svc/postgres-postgresql 5432:5432 --address 0.0.0.0 &
+rbabu@k8s-master:~/charts/postgresql$ 
+
+
+Step 6) Get postgres password 
+rbabu@k8s-master:~/charts/postgresql$ export POSTGRES_PASSWORD=$(kubectl get secret --namespace default postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+rbabu@k8s-master:~/charts/postgresql$ echo $POSTGRES_PASSWORD
+Jn7PpXRTL6
+rbabu@k8s-master:~/charts/postgresql$ 
+

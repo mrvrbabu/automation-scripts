@@ -1,0 +1,165 @@
+Step 1) Create user 'jovyan' on all the nodes or export the /home/jovyan as nfs. 
+root@k8s-slave01:~# useradd -m -d /home/jovyan jovyan 
+useradd: warning: the home directory /home/jovyan already exists.
+useradd: Not copying any file from skel directory into it.
+root@k8s-slave01:~# 
+root@k8s-slave01:~# ls -l /home 
+total 8
+drwxr-xr-x  2 root  root  4096 Jun  8 18:10 jovyan
+drwxr-x--- 15 rbabu rbabu 4096 Jun  6 00:04 rbabu
+root@k8s-slave01:~# 
+root@k8s-slave01:~# 
+root@k8s-slave01:~# ls -l /data
+total 36
+drwxrwxr-x 2 rbabu  rbabu   4096 Jun  8 18:13 jupyterhub
+drwx------ 2 root   root   16384 May 30 17:17 lost+found
+drwxrwxrwx 3 jovyan jovyan  4096 Jun  8 17:24 postgresql
+drwxr-xr-x 3 root   root    4096 Jun  3 15:50 python-test-bucket
+drwxr-xr-x 4 root   root    4096 Jun  3 14:53 rb-bucket01
+-rw-rw-r-- 1 rbabu  rbabu     12 May 31 17:45 test.txt
+root@k8s-slave01:~# chmod -v 777 /home/jovyan/
+mode of '/home/jovyan/' changed from 0755 (rwxr-xr-x) to 0777 (rwxrwxrwx)
+root@k8s-slave01:~# 
+
+
+Step 2) Create a pv with below yml file, the pv will be used by the persistant volume claim 
+
+rbabu@k8s-master:~/jupyterhub-helm$ cat jovyanuser-pv.yaml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-jupyter 
+  labels:
+    type: local
+spec:
+  #storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+   path: "/home/jovyan"
+rbabu@k8s-master:~/jupyterhub-helm$ 
+
+
+Step 3) Create data directory under /data as /data/jupyterhub
+rbabu@k8s-master:~/jupyterhub-helm$ cat jupyterhub-pv.yaml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: juypterhub-pv
+  labels:
+    type: local
+spec:
+  #storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+   path: "/data/jupyterhub"
+rbabu@k8s-master:~/jupyterhub-helm$ 
+
+
+Step 4) Make sure the persistant volume is bound to the persistant volume claim after applying the yml files 
+rbabu@k8s-master:~/jupyterhub-helm$ kubectl get pv 
+NAME             CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                STORAGECLASS   REASON   AGE
+juypterhub-pv    10Gi       RWO            Retain           Bound    default/hub-db-dir                                           33m
+postgresql-pv    10Gi       RWO            Retain           Bound    default/data-postgres-postgresql-0                           70m
+volume-jupyter   10Gi       RWO            Retain           Bound    default/claim-jupyter                                        16m
+rbabu@k8s-master:~/jupyterhub-helm$ kubectl get pvc
+NAME                         STATUS   VOLUME           CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+claim-jupyter                Bound    volume-jupyter   10Gi       RWO                           30m
+data-postgres-postgresql-0   Bound    postgresql-pv    10Gi       RWO                           62m
+hub-db-dir                   Bound    juypterhub-pv    10Gi       RWO                           43m
+rbabu@k8s-master:~/jupyterhub-helm$ 
+
+Step 5) Add helm repo 
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+
+Step 6) Pull jupyter hub chart (optional)
+helm pull jupyterhub/jupyterhub 
+
+Step 7) Install jupypter releae 
+
+helm install jupyterhub jupyterhub/jupyterhub --version 3.3.7
+
+
+Step 8) jupyter install output 
+
+rbabu@k8s-master:~$ helm install jupyterhub jupyterhub/jupyterhub --version 3.3.7
+NAME: jupyterhub
+LAST DEPLOYED: Sat Jun  8 17:43:00 2024
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+.      __                          __                  __  __          __
+      / / __  __  ____    __  __  / /_  ___    _____  / / / / __  __  / /_
+ __  / / / / / / / __ \  / / / / / __/ / _ \  / ___/ / /_/ / / / / / / __ \
+/ /_/ / / /_/ / / /_/ / / /_/ / / /_  /  __/ / /    / __  / / /_/ / / /_/ /
+\____/  \__,_/ / .___/  \__, /  \__/  \___/ /_/    /_/ /_/  \__,_/ /_.___/
+              /_/      /____/
+
+       You have successfully installed the official JupyterHub Helm chart!
+
+### Installation info
+
+  - Kubernetes namespace: default
+  - Helm release name:    jupyterhub
+  - Helm chart version:   3.3.7
+  - JupyterHub version:   4.1.5
+  - Hub pod packages:     See https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/3.3.7/images/hub/requirements.txt
+
+### Followup links
+
+  - Documentation:  https://z2jh.jupyter.org
+  - Help forum:     https://discourse.jupyter.org
+  - Social chat:    https://gitter.im/jupyterhub/jupyterhub
+  - Issue tracking: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/issues
+
+### Post-installation checklist
+
+  - Verify that created Pods enter a Running state:
+
+      kubectl --namespace=default get pod
+
+    If a pod is stuck with a Pending or ContainerCreating status, diagnose with:
+
+      kubectl --namespace=default describe pod <name of pod>
+
+    If a pod keeps restarting, diagnose with:
+
+      kubectl --namespace=default logs --previous <name of pod>
+
+  - Verify an external IP is provided for the k8s Service proxy-public.
+
+      kubectl --namespace=default get service proxy-public
+
+    If the external ip remains <pending>, diagnose with:
+
+      kubectl --namespace=default describe service proxy-public
+
+  - Verify web based access:
+
+    You have not configured a k8s Ingress resource so you need to access the k8s
+    Service proxy-public directly.
+
+    If your computer is outside the k8s cluster, you can port-forward traffic to
+    the k8s Service proxy-public with kubectl to access it from your
+    computer.
+
+      kubectl --namespace=default port-forward service/proxy-public 8080:http
+
+    Try insecure HTTP access: http://localhost:8080
+rbabu@k8s-master:~$ 
+
+
+Step 9) Execute below commmand to perform port-forward 
+
+kubectl --namespace=default port-forward service/proxy-public 8080:http --address 0.0.0.0 &
+
+Step 10) access the jupyter hub on port 8080 with server's ipaddress 
+
+

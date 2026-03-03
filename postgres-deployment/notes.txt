@@ -1,0 +1,113 @@
+https://www.codeproject.com/Articles/5298768/Deploy-and-Manage-PostgreSQL-on-Kubernetes
+
+sudo apt-get install postgresql-client-common
+sudo apt-get install postgresql-client
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: postgresdb
+  POSTGRES_USER: postgresadmin
+  POSTGRES_PASSWORD: admin123
+
+
+rbabu@k8s-master:/nfsstorage/automation-scripts/postgres-deployment/postgres01$ psql -h localhost -U postgresadmin --password -p 32374 postgresdb
+Password: 
+psql (14.12 (Ubuntu 14.12-0ubuntu0.22.04.1), server 10.4 (Debian 10.4-2.pgdg90+1))
+Type "help" for help.
+
+postgresdb=# \l
+                                 List of databases
+    Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges   
+------------+----------+----------+------------+------------+-----------------------
+ postgres   | postgres | UTF8     | en_US.utf8 | en_US.utf8 | 
+ postgresdb | postgres | UTF8     | en_US.utf8 | en_US.utf8 | 
+ template0  | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+            |          |          |            |            | postgres=CTc/postgres
+ template1  | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+            |          |          |            |            | postgres=CTc/postgres
+(4 rows)
+
+postgresdb=# 
+
+
+https://severalnines.com/blog/using-kubernetes-deploy-postgresql/
+
+Refer this document for working copy of postgres pod 
+
+Upddate the apiVersion and add selector as below (refer updated code in repo)
+
+selector:
+    matchLabels:
+      app: postgres
+
+
+Port forward to allow postgres to listen on on all 
+
+rbabu@k8s-master:/data/postgresql$ kubectl get svc
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP          26h
+postgres     NodePort    10.108.17.205   <none>        5432:32374/TCP   7h3m
+rbabu@k8s-master:/data/postgresql$ kubectl port-forward --address 0.0.0.0 svc/postgres 5432:5432 
+Forwarding from 0.0.0.0:5432 -> 5432
+Handling connection for 5432
+^Crbabu@k8s-master:/data/postgresql$ kubectl port-forward --address 0.0.0.0 svc/postgres 5432:5432 &
+[1] 310933
+rbabu@k8s-master:/data/postgresql$ Forwarding from 0.0.0.0:5432 -> 5432
+
+rbabu@k8s-master:/data/postgresql$ netstat -ntlp 
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:36263           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:39953         0.0.0.0:*               LISTEN      18530/node          
+tcp        0      0 0.0.0.0:2049            0.0.0.0:*               LISTEN      -                   
+tcp        0      0 192.168.0.10:2380       0.0.0.0:*               LISTEN      -                   
+tcp        0      0 192.168.0.10:2379       0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:42095           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:41463           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:179             0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:44435         0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:2381          0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:2379          0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:10249         0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:10248         0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:10257         0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:10259         0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:5432            0.0.0.0:*               LISTEN      310933/kubectl      
+tcp        0      0 127.0.0.1:9099          0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:9098          0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:45979           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:53959           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::36595                :::*                    LISTEN      -                   
+tcp6       0      0 :::60187                :::*                    LISTEN      -                   
+tcp6       0      0 :::2049                 :::*                    LISTEN      -                   
+tcp6       0      0 :::10250                :::*                    LISTEN      -                   
+tcp6       0      0 :::10256                :::*                    LISTEN      -                   
+tcp6       0      0 :::111                  :::*                    LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      -                   
+tcp6       0      0 :::32967                :::*                    LISTEN      -                   
+tcp6       0      0 :::48661                :::*                    LISTEN      -                   
+tcp6       0      0 :::6443                 :::*                    LISTEN      -                   
+tcp6       0      0 :::5473                 :::*                    LISTEN      -                   
+tcp6       0      0 :::37085                :::*                    LISTEN      -                   
+rbabu@k8s-master:/data/postgresql$ 
+rbabu@k8s-master:/data/postgresql$ 
+
+Note: To uninstall kubernetes simply execut 'kubeadm reset' 
+https://www.baeldung.com/ops/kubernetes-uninstall
+
+
+Postgres Dataset example 
+https://neon.tech/docs/import/import-sample-data#employees-database
+
+wget https://raw.githubusercontent.com/neondatabase/postgres-sample-dbs/main/netflix.sql
+wget https://raw.githubusercontent.com/neondatabase/postgres-sample-dbs/main/employees.sql.gz
